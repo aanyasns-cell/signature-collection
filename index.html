@@ -3,87 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signature Collection Form</title>
+    <title>Sign the Petition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #161618;
+            --container-bg: #1e1e20;
+            --input-bg: #161618;
+            --input-border: #333336;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent-green: #6bcf93;
+            --accent-green-hover: #5ab87f;
+            --error-red: #ef4444;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
+            margin: 0;
         }
+
         .form-container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #2a2a2c;
             width: 100%;
             max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        h2 { text-align: center; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type="text"], input[type="number"], select {
-            width: 100%; padding: 10px; border: 1px solid #ccc;
-            border-radius: 4px; box-sizing: border-box;
+
+        .header {
+            margin-bottom: 30px;
         }
-        .canvas-container { margin-bottom: 15px; }
+
+        .header h2 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Grid for side-by-side inputs */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        /* Checkbox styling */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background-color: #242426;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: var(--accent-green);
+            width: 16px;
+            height: 16px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            color: #d1d5db;
+            font-size: 13px;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        /* Canvas Styling */
+        .canvas-container {
+            margin-bottom: 25px;
+        }
+        
         canvas {
-            border: 2px dashed #007bff; border-radius: 4px;
-            background-color: #fdfdfd; cursor: crosshair;
-            touch-action: none; width: 100%;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            /* Light background so black ink shows up in Google Sheets */
+            background-color: #f3f4f6; 
+            cursor: crosshair;
+            touch-action: none; 
+            width: 100%;
         }
-        .button-group { display: flex; gap: 10px; }
-        button {
-            flex: 1; padding: 10px; border: none; border-radius: 4px;
-            font-size: 16px; cursor: pointer; color: #fff;
+
+        .clear-link {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            cursor: pointer;
+            text-decoration: underline;
         }
-        .btn-submit { background-color: #28a745; }
-        .btn-submit:hover { background-color: #218838; }
-        .btn-clear { background-color: #dc3545; }
-        .btn-clear:hover { background-color: #c82333; }
+
+        .clear-link:hover {
+            color: var(--text-main);
+        }
+
+        button.btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-green);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button.btn-submit:hover {
+            background-color: var(--accent-green-hover);
+        }
+
+        button.btn-submit:disabled {
+            background-color: #4a805f;
+            cursor: not-allowed;
+            color: #1a1a1a;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="form-container">
-    <h2>Student Details & Signature</h2>
+    <div class="header">
+        <h2>Sign the Petition</h2>
+        <p>Your voice matters. Add your signature to support the registration.</p>
+    </div>
+
     <form id="collectionForm">
-        <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" required placeholder="Enter your name">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required placeholder="Enter your first name">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" required placeholder="Enter your last name">
+            </div>
         </div>
         
-        <div class="form-group">
-            <label for="year">Year</label>
-            <select id="year" required>
-                <option value="">Select Year</option>
-                <option value="1st Year">1st Year</option>
-                <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year">3rd Year</option>
-                <option value="4th Year">4th Year</option>
-            </select>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="rollno">Roll Number</label>
+                <input type="text" id="rollno" required placeholder="e.g. 24/299">
+            </div>
+            <div class="form-group">
+                <label for="year">Year</label>
+                <select id="year" required>
+                    <option value="" disabled selected>Select year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
             <label for="department">Department</label>
-            <input type="text" id="department" required placeholder="e.g., Computer Science">
+            <select id="department" required>
+                <option value="" disabled selected>Select department</option>
+                <option value="BA Programme">BA Programme</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Economics">Economics</option>
+                <option value="Elementary Education">Elementary Education</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="History">History</option>
+                <option value="Journalism">Journalism</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Philosophy">Philosophy</option>
+                <option value="Political Science">Political Science</option>
+                <option value="Psychology">Psychology</option>
+                <option value="Sanskrit">Sanskrit</option>
+                <option value="Sociology">Sociology</option>
+                <option value="Statistics">Statistics</option>
+            </select>
         </div>
 
-        <div class="form-group">
-            <label for="rollno">Roll No.</label>
-            <input type="text" id="rollno" required placeholder="Enter your roll number">
+        <div class="checkbox-group">
+            <input type="checkbox" id="lsrStudent" required>
+            <label for="lsrStudent">I am a currently enrolled student of LSR and I voluntarily support the registration of the NationBuilding Impact Chapter as an official college society.</label>
         </div>
 
         <div class="canvas-container">
             <label>Signature</label>
-            <canvas id="signaturePad" width="440" height="200"></canvas>
+            <canvas id="signaturePad" width="440" height="150"></canvas>
+            <span class="clear-link" id="clearBtn">Clear Signature</span>
         </div>
 
-        <div class="button-group">
-            <button type="button" class="btn-clear" id="clearBtn">Clear Signature</button>
-            <button type="submit" class="btn-submit">Submit Record</button>
-        </div>
+        <button type="submit" class="btn-submit">Sign the Petition</button>
     </form>
 </div>
 
@@ -95,8 +264,8 @@
 
     // Drawing State
     let isDrawing = false;
-    ctx.strokeStyle = '#000000'; 
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#000000'; // Black ink for visibility on the white sheet
+    ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
 
     function getCoordinates(event) {
@@ -130,7 +299,7 @@
     clearBtn.addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
 
     // ==========================================
-    // YOUR KEYS ARE PLUGGED IN HERE
+    // YOUR API KEYS GO HERE
     // ==========================================
     const imgbbAPIKey = 'b2541a1b7001d561fcbb20850f9aedeb'; 
     const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwKRWSEbm24juz86uVIm1bVWiL3FT2cjAR4R8cvZXiOzjkhewLjudnbEB2dx6URKskpOg/exec'; 
@@ -138,6 +307,10 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         const submitBtn = document.querySelector('.btn-submit');
+        
+        // Combine First and Last name to keep your spreadsheet format the exact same
+        const fullName = document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim();
+        
         submitBtn.textContent = "Uploading Signature...";
         submitBtn.disabled = true;
 
@@ -157,13 +330,13 @@
             
             if (!imgResult.success) throw new Error("Image upload failed");
             
-            // This is the clean, short link from ImgBB!
+            // Clean short link
             const signatureLink = imgResult.data.url; 
 
-            // 3. Send data + clean link to Google Sheets
+            // 3. Send data to Google Sheets
             submitBtn.textContent = "Saving to Database...";
             const sheetData = {
-                name: document.getElementById('name').value,
+                name: fullName,
                 year: document.getElementById('year').value,
                 department: document.getElementById('department').value,
                 rollNo: document.getElementById('rollno').value,
@@ -178,18 +351,17 @@
             const sheetResult = await sheetResponse.json();
 
             if (sheetResult.status === "success") {
-                alert(`Successfully recorded data for ${sheetData.name}!`);
+                alert(`Thank you, ${fullName}! Your signature has been recorded.`);
                 form.reset();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             } else {
                 alert("Database error. Please try again.");
-                console.error(sheetResult.message);
             }
         } catch (error) {
             console.error('Error!', error);
             alert("Network error. Please check your connection and try again.");
         } finally {
-            submitBtn.textContent = "Submit Record";
+            submitBtn.textContent = "Sign the Petition";
             submitBtn.disabled = false;
         }
     });
