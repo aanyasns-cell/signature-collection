@@ -140,7 +140,6 @@
     // Utility function to get correct mouse/touch coordinates
     function getCoordinates(event) {
         const rect = canvas.getBoundingClientRect();
-        // Scale handles mismatch between internal canvas resolution and CSS size
         const scaleX = canvas.width / rect.width;   
         const scaleY = canvas.height / rect.height; 
 
@@ -165,7 +164,7 @@
     // Stop Drawing
     function endPosition() {
         isDrawing = false;
-        ctx.beginPath(); // Reset path so next click doesn't connect to the last one
+        ctx.beginPath(); 
     }
 
     // Draw Function
@@ -189,7 +188,7 @@
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseout', endPosition);
 
-    // Event Listeners for Touch (Mobile support is crucial for signatures)
+    // Event Listeners for Touch (Mobile support)
     canvas.addEventListener('touchstart', startPosition, { passive: false });
     canvas.addEventListener('touchend', endPosition);
     canvas.addEventListener('touchmove', draw, { passive: false });
@@ -199,28 +198,26 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
-   // Paste your Google Web App URL here
-    const scriptURL = 'YOUR_WEB_APP_URL_HERE'; 
+    // --- YOUR SECURE GOOGLE SHEET LINK ---
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzEMJsfxRjo_kOsxKDiuUlWKSJ_zUJ0Bk5fOIk_yGug71DswIdOq5Rp-oz9WGGQiitNBQ/exec'; 
 
+    // Handle Form Submission
     form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent page reload
+        e.preventDefault(); 
 
-        // Get the submit button to show a loading state
         const submitBtn = document.querySelector('.btn-submit');
         submitBtn.textContent = "Submitting...";
         submitBtn.disabled = true;
 
-        // Gather all data
         const formData = {
             name: document.getElementById('name').value,
             year: document.getElementById('year').value,
             department: document.getElementById('department').value,
             rollNo: document.getElementById('rollno').value,
-            signature: canvas.toDataURL('image/png') // The signature as a Base64 string
+            signature: canvas.toDataURL('image/png') 
         };
 
         try {
-            // Send the data to Google Sheets
             const response = await fetch(scriptURL, {
                 method: 'POST',
                 body: JSON.stringify(formData),
@@ -243,33 +240,9 @@
             console.error('Error!', error.message);
             alert("Network error. Please check your connection and try again.");
         } finally {
-            // Reset the button
             submitBtn.textContent = "Submit Record";
             submitBtn.disabled = false;
         }
-    });
-
-        // 1. Gather text data
-        const formData = {
-            name: document.getElementById('name').value,
-            year: document.getElementById('year').value,
-            department: document.getElementById('department').value,
-            rollNo: document.getElementById('rollno').value,
-        };
-
-        // 2. Gather Signature Image Data 
-        // This converts the canvas drawing into a Base64 Image String (PNG)
-        const signatureDataUrl = canvas.toDataURL('image/png');
-        formData.signature = signatureDataUrl;
-
-        // --- IMPORTANT: What to do with the data? ---
-        // For demonstration, we will log it to the console and show an alert.
-        console.log("Record Collected:", formData);
-        alert(`Successfully recorded data for ${formData.name}! (Check browser console for the image data)`);
-
-        // Reset form for the next person
-        form.reset();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 </script>
 
