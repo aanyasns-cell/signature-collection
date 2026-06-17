@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign the Petition</title>
+    <!-- Importing a clean, modern font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -36,25 +37,13 @@
             width: 100%;
             max-width: 500px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-sizing: border-box;
         }
 
-        .header {
-            margin-bottom: 30px;
-        }
+        .header { margin-bottom: 30px; }
+        .header h2 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+        .header p { margin: 0; font-size: 14px; color: var(--text-muted); }
 
-        .header h2 {
-            margin: 0 0 8px 0;
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .header p {
-            margin: 0;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        /* Grid for side-by-side inputs */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -62,13 +51,8 @@
             margin-bottom: 15px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
+        .form-group { margin-bottom: 15px; }
+        .form-row .form-group { margin-bottom: 0; }
 
         label {
             display: block;
@@ -90,12 +74,8 @@
             transition: border-color 0.2s;
         }
 
-        input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: var(--accent-green);
-        }
+        input[type="text"]:focus, select:focus { outline: none; border-color: var(--accent-green); }
 
-        /* Checkbox styling */
         .checkbox-group {
             display: flex;
             align-items: flex-start;
@@ -107,154 +87,108 @@
             margin-bottom: 25px;
         }
 
-        .checkbox-group input[type="checkbox"] {
-            margin-top: 3px;
-            accent-color: var(--accent-green);
-            width: 16px;
-            height: 16px;
-        }
+        .checkbox-group input[type="checkbox"] { margin-top: 3px; accent-color: var(--accent-green); width: 16px; height: 16px; }
+        .checkbox-group label { margin: 0; color: #d1d5db; font-size: 13px; line-height: 1.5; cursor: pointer; }
 
-        .checkbox-group label {
-            margin: 0;
-            color: #d1d5db;
-            font-size: 13px;
-            line-height: 1.5;
-            cursor: pointer;
-        }
-
-        /* Canvas Styling */
-        .canvas-container {
-            margin-bottom: 25px;
-        }
-        
+        .canvas-container { margin-bottom: 25px; }
         canvas {
             border: 1px solid var(--input-border);
             border-radius: 6px;
-            /* Light background so black ink shows up in Google Sheets */
             background-color: #f3f4f6; 
             cursor: crosshair;
             touch-action: none; 
             width: 100%;
         }
 
-        .clear-link {
-            display: block;
-            text-align: right;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 5px;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .clear-link:hover {
-            color: var(--text-main);
-        }
+        .clear-link { display: block; text-align: right; font-size: 12px; color: var(--text-muted); margin-top: 5px; cursor: pointer; text-decoration: underline; }
+        .clear-link:hover { color: var(--text-main); }
 
         button.btn-submit {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--accent-green);
-            color: #000;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            width: 100%; padding: 14px; background-color: var(--accent-green); color: #000;
+            border: none; border-radius: 6px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: background-color 0.2s;
         }
+        button.btn-submit:hover { background-color: var(--accent-green-hover); }
+        button.btn-submit:disabled { background-color: #4a805f; cursor: not-allowed; color: #1a1a1a; }
 
-        button.btn-submit:hover {
-            background-color: var(--accent-green-hover);
-        }
-
-        button.btn-submit:disabled {
-            background-color: #4a805f;
-            cursor: not-allowed;
-            color: #1a1a1a;
-        }
-
-        /* Mobile adjustments */
         @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <div class="header">
-        <h2>Sign the Petition</h2>
-        <p>Your voice matters. Add your signature to support the registration.</p>
-    </div>
-
-    <form id="collectionForm">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" required placeholder="Enter your first name">
-            </div>
-            <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" required placeholder="Enter your last name">
-            </div>
+    <div class="form-container">
+        <div class="header">
+            <h2>Sign the Petition</h2>
+            <p>Your voice matters. Add your signature to support the registration.</p>
         </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label for="rollno">Roll Number</label>
-                <input type="text" id="rollno" required placeholder="e.g. 24/299">
+
+        <form id="collectionForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required placeholder="Enter your first name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required placeholder="Enter your last name">
+                </div>
             </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="rollno">Roll Number</label>
+                    <input type="text" id="rollno" required placeholder="e.g. 24/299">
+                </div>
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <select id="year" required>
+                        <option value="" disabled selected>Select year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="year">Year</label>
-                <select id="year" required>
-                    <option value="" disabled selected>Select year</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
+                <label for="department">Department</label>
+                <select id="department" required>
+                    <option value="" disabled selected>Select department</option>
+                    <option value="BA Programme">BA Programme</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Economics">Economics</option>
+                    <option value="Elementary Education">Elementary Education</option>
+                    <option value="English">English</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="History">History</option>
+                    <option value="Journalism">Journalism</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Philosophy">Philosophy</option>
+                    <option value="Political Science">Political Science</option>
+                    <option value="Psychology">Psychology</option>
+                    <option value="Sanskrit">Sanskrit</option>
+                    <option value="Sociology">Sociology</option>
+                    <option value="Statistics">Statistics</option>
                 </select>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="department">Department</label>
-            <select id="department" required>
-                <option value="" disabled selected>Select department</option>
-                <option value="BA Programme">BA Programme</option>
-                <option value="Commerce">Commerce</option>
-                <option value="Economics">Economics</option>
-                <option value="Elementary Education">Elementary Education</option>
-                <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
-                <option value="History">History</option>
-                <option value="Journalism">Journalism</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="Philosophy">Philosophy</option>
-                <option value="Political Science">Political Science</option>
-                <option value="Psychology">Psychology</option>
-                <option value="Sanskrit">Sanskrit</option>
-                <option value="Sociology">Sociology</option>
-                <option value="Statistics">Statistics</option>
-            </select>
-        </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="lsrStudent" required>
+                <label for="lsrStudent">I am a currently enrolled student of LSR and I voluntarily support the registration of GAEE LSR as an official college society.</label>
+            </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" id="lsrStudent" required>
-            <label for="lsrStudent">I am a currently enrolled student of LSR and I voluntarily support the registration of the NationBuilding Impact Chapter as an official college society.</label>
-        </div>
+            <div class="canvas-container">
+                <label>Signature</label>
+                <canvas id="signaturePad" width="440" height="150"></canvas>
+                <span class="clear-link" id="clearBtn">Clear Signature</span>
+            </div>
 
-        <div class="canvas-container">
-            <label>Signature</label>
-            <canvas id="signaturePad" width="440" height="150"></canvas>
-            <span class="clear-link" id="clearBtn">Clear Signature</span>
-        </div>
-
-        <button type="submit" class="btn-submit">Sign the Petition</button>
-    </form>
-</div>
+            <button type="submit" class="btn-submit">Sign the Petition</button>
+        </form>
+    </div>
 
 <script>
     const canvas = document.getElementById('signaturePad');
