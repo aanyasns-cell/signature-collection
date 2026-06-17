@@ -199,9 +199,55 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Handle Form Submission
-    form.addEventListener('submit', (e) => {
+   // Paste your Google Web App URL here
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE'; 
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent page reload
+
+        // Get the submit button to show a loading state
+        const submitBtn = document.querySelector('.btn-submit');
+        submitBtn.textContent = "Submitting...";
+        submitBtn.disabled = true;
+
+        // Gather all data
+        const formData = {
+            name: document.getElementById('name').value,
+            year: document.getElementById('year').value,
+            department: document.getElementById('department').value,
+            rollNo: document.getElementById('rollno').value,
+            signature: canvas.toDataURL('image/png') // The signature as a Base64 string
+        };
+
+        try {
+            // Send the data to Google Sheets
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8', 
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.status === "success") {
+                alert(`Successfully recorded data for ${formData.name}!`);
+                form.reset();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                alert("Something went wrong on the server. Please try again.");
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error!', error.message);
+            alert("Network error. Please check your connection and try again.");
+        } finally {
+            // Reset the button
+            submitBtn.textContent = "Submit Record";
+            submitBtn.disabled = false;
+        }
+    });
 
         // 1. Gather text data
         const formData = {
