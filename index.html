@@ -20,64 +20,28 @@
             width: 100%;
             max-width: 500px;
         }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
+        h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
         input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+            width: 100%; padding: 10px; border: 1px solid #ccc;
+            border-radius: 4px; box-sizing: border-box;
         }
-        /* Canvas Styling */
-        .canvas-container {
-            margin-bottom: 15px;
-        }
+        .canvas-container { margin-bottom: 15px; }
         canvas {
-            border: 2px dashed #007bff;
-            border-radius: 4px;
-            background-color: #fdfdfd;
-            cursor: crosshair;
-            /* Prevents scrolling on mobile while drawing */
-            touch-action: none; 
-            width: 100%;
+            border: 2px dashed #007bff; border-radius: 4px;
+            background-color: #fdfdfd; cursor: crosshair;
+            touch-action: none; width: 100%;
         }
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
+        .button-group { display: flex; gap: 10px; }
         button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            color: #fff;
+            flex: 1; padding: 10px; border: none; border-radius: 4px;
+            font-size: 16px; cursor: pointer; color: #fff;
         }
-        .btn-submit {
-            background-color: #28a745;
-        }
-        .btn-submit:hover {
-            background-color: #218838;
-        }
-        .btn-clear {
-            background-color: #dc3545;
-        }
-        .btn-clear:hover {
-            background-color: #c82333;
-        }
+        .btn-submit { background-color: #28a745; }
+        .btn-submit:hover { background-color: #218838; }
+        .btn-clear { background-color: #dc3545; }
+        .btn-clear:hover { background-color: #c82333; }
     </style>
 </head>
 <body>
@@ -131,113 +95,98 @@
 
     // Drawing State
     let isDrawing = false;
-
-    // Stroke styling
-    ctx.strokeStyle = '#000000'; // Black ink
+    ctx.strokeStyle = '#000000'; 
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
 
-    // Utility function to get correct mouse/touch coordinates
     function getCoordinates(event) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;   
         const scaleY = canvas.height / rect.height; 
-
         if (event.touches && event.touches.length > 0) {
-            return {
-                x: (event.touches[0].clientX - rect.left) * scaleX,
-                y: (event.touches[0].clientY - rect.top) * scaleY
-            };
+            return { x: (event.touches[0].clientX - rect.left) * scaleX, y: (event.touches[0].clientY - rect.top) * scaleY };
         }
-        return {
-            x: (event.clientX - rect.left) * scaleX,
-            y: (event.clientY - rect.top) * scaleY
-        };
+        return { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY };
     }
 
-    // Start Drawing
-    function startPosition(e) {
-        isDrawing = true;
-        draw(e);
-    }
-
-    // Stop Drawing
-    function endPosition() {
-        isDrawing = false;
-        ctx.beginPath(); 
-    }
-
-    // Draw Function
+    function startPosition(e) { isDrawing = true; draw(e); }
+    function endPosition() { isDrawing = false; ctx.beginPath(); }
+    
     function draw(e) {
         if (!isDrawing) return;
-        
-        // Prevent default scrolling on touch devices while drawing
         if (e.type.includes('touch')) e.preventDefault();
-
         const { x, y } = getCoordinates(e);
-
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
+        ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y);
     }
 
-    // Event Listeners for Mouse
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', endPosition);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseout', endPosition);
-
-    // Event Listeners for Touch (Mobile support)
     canvas.addEventListener('touchstart', startPosition, { passive: false });
     canvas.addEventListener('touchend', endPosition);
     canvas.addEventListener('touchmove', draw, { passive: false });
 
-    // Clear Canvas
-    clearBtn.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
+    clearBtn.addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); });
 
-    // --- YOUR SECURE GOOGLE SHEET LINK ---
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyYv_jwGoC6m44SJCEAsH_Z6fR0ihyivQwQsaaP7HfwO0btHUIds6IZ1kieGOLDbehn/exec'; 
+    // ==========================================
+    // YOUR KEYS ARE PLUGGED IN HERE
+    // ==========================================
+    const imgbbAPIKey = 'b2541a1b7001d561fcbb20850f9aedeb'; 
+    const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwKRWSEbm24juz86uVIm1bVWiL3FT2cjAR4R8cvZXiOzjkhewLjudnbEB2dx6URKskpOg/exec'; 
 
-    // Handle Form Submission
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); 
-
         const submitBtn = document.querySelector('.btn-submit');
-        submitBtn.textContent = "Submitting...";
+        submitBtn.textContent = "Uploading Signature...";
         submitBtn.disabled = true;
 
-        const formData = {
-            name: document.getElementById('name').value,
-            year: document.getElementById('year').value,
-            department: document.getElementById('department').value,
-            rollNo: document.getElementById('rollno').value,
-            signature: canvas.toDataURL('image/png') 
-        };
-
         try {
-            const response = await fetch(scriptURL, {
+            // 1. Convert signature to raw base64 data
+            const rawBase64 = canvas.toDataURL('image/png').split(',')[1];
+            
+            // 2. Upload to ImgBB
+            const imgFormData = new FormData();
+            imgFormData.append('image', rawBase64);
+            
+            const imgResponse = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbAPIKey}`, {
                 method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8', 
-                }
+                body: imgFormData
             });
+            const imgResult = await imgResponse.json();
+            
+            if (!imgResult.success) throw new Error("Image upload failed");
+            
+            // This is the clean, short link from ImgBB!
+            const signatureLink = imgResult.data.url; 
 
-            const result = await response.json();
+            // 3. Send data + clean link to Google Sheets
+            submitBtn.textContent = "Saving to Database...";
+            const sheetData = {
+                name: document.getElementById('name').value,
+                year: document.getElementById('year').value,
+                department: document.getElementById('department').value,
+                rollNo: document.getElementById('rollno').value,
+                signature: signatureLink 
+            };
 
-            if (result.status === "success") {
-                alert(`Successfully recorded data for ${formData.name}!`);
+            const sheetResponse = await fetch(googleScriptURL, {
+                method: 'POST',
+                body: JSON.stringify(sheetData),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            });
+            const sheetResult = await sheetResponse.json();
+
+            if (sheetResult.status === "success") {
+                alert(`Successfully recorded data for ${sheetData.name}!`);
                 form.reset();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             } else {
-                alert("Something went wrong on the server. Please try again.");
-                console.error(result.message);
+                alert("Database error. Please try again.");
+                console.error(sheetResult.message);
             }
         } catch (error) {
-            console.error('Error!', error.message);
+            console.error('Error!', error);
             alert("Network error. Please check your connection and try again.");
         } finally {
             submitBtn.textContent = "Submit Record";
